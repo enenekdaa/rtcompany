@@ -1,1 +1,8 @@
 .vercel
+
+# Flutter/Dart
+.dart_tool/
+build/
+.idea/
+.DS_Store
+*.iml
