@@ -2,7 +2,8 @@
 
 # Flutter/Dart
 .dart_tool/
-build/
+build/*
+!build/web/
 .idea/
 .DS_Store
 *.iml
