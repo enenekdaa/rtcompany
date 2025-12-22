@@ -34,6 +34,7 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
   final _regularPriceController = TextEditingController();
   final _customerPriceController = TextEditingController();
   final _shippingFeeController = TextEditingController();
+  final _startDateController = TextEditingController();
   final _durationDaysController = TextEditingController();
   final _keywordsController = TextEditingController();
   final _missionContentController = TextEditingController();
@@ -70,6 +71,7 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
     _regularPriceController.dispose();
     _customerPriceController.dispose();
     _shippingFeeController.dispose();
+    _startDateController.dispose();
     _durationDaysController.dispose();
     _keywordsController.dispose();
     _missionContentController.dispose();
@@ -157,6 +159,7 @@ ${_remarksController.text.isEmpty ? '없음' : _remarksController.text}
                     _regularPriceController.clear();
                     _customerPriceController.clear();
                     _shippingFeeController.clear();
+                    _startDateController.clear();
                     _durationDaysController.clear();
                     _keywordsController.clear();
                     _missionContentController.clear();
@@ -618,38 +621,35 @@ ${_remarksController.text.isEmpty ? '없음' : _remarksController.text}
               ),
             ),
             const SizedBox(height: 20),
-            InkWell(
+            TextFormField(
+              controller: _startDateController,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: '상품 구매 시작 일자 *',
+                hintText: '날짜를 선택해주세요',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.calendar_today),
+              ),
               onTap: () async {
                 final DateTime? picked = await showDatePicker(
                   context: context,
                   initialDate: _selectedStartDate ?? DateTime.now(),
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(const Duration(days: 365)),
-                  locale: const Locale('ko', 'KR'),
                 );
                 if (picked != null) {
                   setState(() {
                     _selectedStartDate = picked;
+                    _startDateController.text = '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
                   });
                 }
               },
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: '상품 구매 시작 일자 *',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-                child: Text(
-                  _selectedStartDate != null
-                      ? '${_selectedStartDate!.year}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.day.toString().padLeft(2, '0')}'
-                      : '날짜를 선택해주세요',
-                  style: TextStyle(
-                    color: _selectedStartDate != null
-                        ? Colors.black87
-                        : Colors.black45,
-                  ),
-                ),
-              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '상품 구매 시작 일자를 선택해주세요';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
