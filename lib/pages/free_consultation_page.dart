@@ -31,31 +31,32 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
   final _emailController = TextEditingController();
   final _productNameController = TextEditingController();
   final _productUrlController = TextEditingController();
-  final _reviewCountController = TextEditingController();
-  final _budgetController = TextEditingController();
-  final _detailsController = TextEditingController();
+  final _regularPriceController = TextEditingController();
+  final _customerPriceController = TextEditingController();
+  final _shippingFeeController = TextEditingController();
+  final _durationDaysController = TextEditingController();
+  final _keywordsController = TextEditingController();
+  final _missionContentController = TextEditingController();
+  final _remarksController = TextEditingController();
 
-  String? _selectedIndustry;
-  String? _selectedPlatform;
+  String? _selectedSalesChannel;
+  DateTime? _selectedStartDate;
+  String? _selectedPhotoReview;
 
-  final List<String> _industries = [
-    '음식점',
-    '뷰티/미용',
-    '쇼핑몰/리테일',
-    '서비스업',
-    '숙박/여행',
-    '교육',
-    '의료/헬스케어',
+  final List<String> _salesChannels = [
+    '네이버 스마트스토어',
+    '쿠팡',
+    '11번가',
+    '지마켓',
+    '옥션',
+    'G마켓',
+    '자사몰',
     '기타',
   ];
 
-  final List<String> _platforms = [
-    '네이버',
-    '구글',
-    '인스타그램',
-    '유튜브',
-    '블로그',
-    '기타',
+  final List<String> _photoReviewOptions = [
+    '필수',
+    '선택',
   ];
 
   @override
@@ -66,9 +67,13 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
     _emailController.dispose();
     _productNameController.dispose();
     _productUrlController.dispose();
-    _reviewCountController.dispose();
-    _budgetController.dispose();
-    _detailsController.dispose();
+    _regularPriceController.dispose();
+    _customerPriceController.dispose();
+    _shippingFeeController.dispose();
+    _durationDaysController.dispose();
+    _keywordsController.dispose();
+    _missionContentController.dispose();
+    _remarksController.dispose();
     super.dispose();
   }
 
@@ -79,23 +84,41 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
 
       // Format message with all form data in Korean
       final message = '''
-📝 새로운 무료 상담 신청
+📝 새로운 리뷰 체험단 상담 신청
 
-👤 회사명: ${_companyNameController.text}
-👤 담당자명: ${_managerNameController.text}
-📱 연락처: ${_phoneController.text}
-📧 이메일: ${_emailController.text}
-🏢 업종: ${_selectedIndustry ?? '미선택'}
+👤 기본 정보
+━━━━━━━━━━━━━━━━━━━━
+회사명: ${_companyNameController.text}
+담당자명: ${_managerNameController.text}
+연락처: ${_phoneController.text}
+이메일: ${_emailController.text}
 
-📦 상품명: ${_productNameController.text}
-🔗 상품 URL: ${_productUrlController.text}
+📦 상품 정보
+━━━━━━━━━━━━━━━━━━━━
+판매처: ${_selectedSalesChannel ?? '미선택'}
+상품명: ${_productNameController.text}
+상품URL: ${_productUrlController.text}
 
-⭐ 리뷰 플랫폼: ${_selectedPlatform ?? '미선택'}
-📊 희망 리뷰 건수: ${_reviewCountController.text}
-💰 예산: ${_budgetController.text.isEmpty ? '미입력' : _budgetController.text}
+💰 금액 정보
+━━━━━━━━━━━━━━━━━━━━
+정상가: ${_regularPriceController.text}원
+고객 실구매가: ${_customerPriceController.text}원
+배송비: ${_shippingFeeController.text}원
 
-💬 상세 요청사항:
-${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
+📅 진행 일정
+━━━━━━━━━━━━━━━━━━━━
+상품 구매 시작 일자: ${_selectedStartDate != null ? '${_selectedStartDate!.year}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.day.toString().padLeft(2, '0')}' : '미선택'}
+진행일 수: ${_durationDaysController.text}일
+
+⭐ 리뷰 미션 가이드
+━━━━━━━━━━━━━━━━━━━━
+키워드: ${_keywordsController.text}
+내용: ${_missionContentController.text}
+포토리뷰: ${_selectedPhotoReview ?? '미선택'}
+
+📝 비고
+━━━━━━━━━━━━━━━━━━━━
+${_remarksController.text.isEmpty ? '없음' : _remarksController.text}
 ''';
 
       try {
@@ -131,12 +154,17 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
                     _emailController.clear();
                     _productNameController.clear();
                     _productUrlController.clear();
-                    _reviewCountController.clear();
-                    _budgetController.clear();
-                    _detailsController.clear();
+                    _regularPriceController.clear();
+                    _customerPriceController.clear();
+                    _shippingFeeController.clear();
+                    _durationDaysController.clear();
+                    _keywordsController.clear();
+                    _missionContentController.clear();
+                    _remarksController.clear();
                     setState(() {
-                      _selectedIndustry = null;
-                      _selectedPlatform = null;
+                      _selectedSalesChannel = null;
+                      _selectedStartDate = null;
+                      _selectedPhotoReview = null;
                     });
                   },
                   child: const Text('확인'),
@@ -440,27 +468,6 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
                 return null;
               },
             ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              value: _selectedIndustry,
-              decoration: const InputDecoration(
-                labelText: '업종 / 분야',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.category),
-              ),
-              hint: const Text('업종을 선택해주세요'),
-              items: _industries.map((industry) {
-                return DropdownMenuItem(
-                  value: industry,
-                  child: Text(industry),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedIndustry = value;
-                });
-              },
-            ),
 
             const SizedBox(height: 40),
 
@@ -474,11 +481,38 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
               ),
             ),
             const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: _selectedSalesChannel,
+              decoration: const InputDecoration(
+                labelText: '판매처 *',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.store),
+              ),
+              hint: const Text('판매처를 선택해주세요'),
+              items: _salesChannels.map((channel) {
+                return DropdownMenuItem(
+                  value: channel,
+                  child: Text(channel),
+                );
+              }).toList(),
+              validator: (value) {
+                if (value == null) {
+                  return '판매처를 선택해주세요';
+                }
+                return null;
+              },
+              onChanged: (value) {
+                setState(() {
+                  _selectedSalesChannel = value;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _productNameController,
               decoration: const InputDecoration(
                 labelText: '상품명 *',
-                hintText: '리뷰를 받을 상품 또는 서비스명',
+                hintText: '리뷰를 받을 상품명을 입력해주세요',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.shopping_bag_outlined),
               ),
@@ -493,7 +527,7 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
             TextFormField(
               controller: _productUrlController,
               decoration: const InputDecoration(
-                labelText: '상품 URL *',
+                labelText: '상품URL *',
                 hintText: 'https://example.com/product',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.link),
@@ -508,9 +542,9 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
 
             const SizedBox(height: 40),
 
-            // 리뷰 상세 정보
+            // 금액 정보
             const Text(
-              '리뷰 상세 정보',
+              '금액 정보',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -518,64 +552,213 @@ ${_detailsController.text.isEmpty ? '미입력' : _detailsController.text}
               ),
             ),
             const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              value: _selectedPlatform,
+            TextFormField(
+              controller: _regularPriceController,
               decoration: const InputDecoration(
-                labelText: '리뷰 플랫폼 *',
+                labelText: '정상가 *',
+                hintText: '예: 30000',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.star_outline),
+                prefixIcon: Icon(Icons.payments_outlined),
+                suffixText: '원',
               ),
-              hint: const Text('플랫폼을 선택해주세요'),
-              items: _platforms.map((platform) {
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '정상가를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _customerPriceController,
+              decoration: const InputDecoration(
+                labelText: '고객 실구매가 *',
+                hintText: '예: 20000',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.price_check_outlined),
+                suffixText: '원',
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '고객 실구매가를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _shippingFeeController,
+              decoration: const InputDecoration(
+                labelText: '배송비 *',
+                hintText: '예: 3000 (무료 배송인 경우 0 입력)',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.local_shipping_outlined),
+                suffixText: '원',
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '배송비를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 40),
+
+            // 진행 일정
+            const Text(
+              '진행 일정',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 20),
+            InkWell(
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedStartDate ?? DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                  locale: const Locale('ko', 'KR'),
+                );
+                if (picked != null) {
+                  setState(() {
+                    _selectedStartDate = picked;
+                  });
+                }
+              },
+              child: InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: '상품 구매 시작 일자 *',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.calendar_today),
+                ),
+                child: Text(
+                  _selectedStartDate != null
+                      ? '${_selectedStartDate!.year}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.day.toString().padLeft(2, '0')}'
+                      : '날짜를 선택해주세요',
+                  style: TextStyle(
+                    color: _selectedStartDate != null
+                        ? Colors.black87
+                        : Colors.black45,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _durationDaysController,
+              decoration: const InputDecoration(
+                labelText: '진행일 수 *',
+                hintText: '예: 7',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.event_note),
+                suffixText: '일',
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '진행일 수를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 40),
+
+            // 리뷰 미션 가이드
+            const Text(
+              '리뷰 미션 가이드',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _keywordsController,
+              decoration: const InputDecoration(
+                labelText: '키워드 *',
+                hintText: '예: 편안함, 가성비, 디자인',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.tag),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '키워드를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _missionContentController,
+              decoration: const InputDecoration(
+                labelText: '내용 *',
+                hintText: '리뷰에 포함되어야 할 내용을 자세히 작성해주세요',
+                border: OutlineInputBorder(),
+                alignLabelWithHint: true,
+              ),
+              maxLines: 4,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '리뷰 내용 가이드를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: _selectedPhotoReview,
+              decoration: const InputDecoration(
+                labelText: '포토리뷰 *',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.photo_camera),
+              ),
+              hint: const Text('포토리뷰 필수 여부를 선택해주세요'),
+              items: _photoReviewOptions.map((option) {
                 return DropdownMenuItem(
-                  value: platform,
-                  child: Text(platform),
+                  value: option,
+                  child: Text(option),
                 );
               }).toList(),
               validator: (value) {
                 if (value == null) {
-                  return '리뷰 플랫폼을 선택해주세요';
+                  return '포토리뷰 필수 여부를 선택해주세요';
                 }
                 return null;
               },
               onChanged: (value) {
                 setState(() {
-                  _selectedPlatform = value;
+                  _selectedPhotoReview = value;
                 });
               },
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _reviewCountController,
-              decoration: const InputDecoration(
-                labelText: '희망 리뷰 건수 *',
-                hintText: '예: 10건, 20건',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.numbers),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '희망 리뷰 건수를 입력해주세요';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _budgetController,
-              decoration: const InputDecoration(
-                labelText: '예산 (선택)',
-                hintText: '예: 100,000원 ~ 500,000원',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.attach_money),
+
+            const SizedBox(height: 40),
+
+            // 비고
+            const Text(
+              '비고',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1F2937),
               ),
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _detailsController,
+              controller: _remarksController,
               decoration: const InputDecoration(
-                labelText: '상세 요청사항 (선택)',
-                hintText: '추가로 전달하실 내용을 자유롭게 작성해주세요',
+                labelText: '비고 (선택)',
+                hintText: '예: 랭킹 진입 희망',
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
