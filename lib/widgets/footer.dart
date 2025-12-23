@@ -80,8 +80,6 @@ class AppFooter extends StatelessWidget {
                         _buildInfoText('주소', '경기도 성남시 수정구 오야로6 2층 38호'),
                         const SizedBox(height: 8),
                         _buildInfoText('이메일', 'help@rtcompany.co.kr'),
-                        const SizedBox(height: 8),
-                        _buildInfoText('전화', '010-6247-6996'),
                       ],
                     ),
                   ),

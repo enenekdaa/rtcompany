@@ -318,12 +318,6 @@ ${_messageController.text}
         ),
         const SizedBox(height: 24),
         _buildContactInfoItem(
-          icon: Icons.phone_outlined,
-          title: '전화',
-          content: '010-6247-6996',
-        ),
-        const SizedBox(height: 24),
-        _buildContactInfoItem(
           icon: Icons.language,
           title: '웹사이트',
           content: 'rtcompany.co.kr',
