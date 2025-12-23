@@ -75,7 +75,7 @@ class AppFooter extends StatelessWidget {
                         const SizedBox(height: 8),
                         _buildInfoText('대표', '김현'),
                         const SizedBox(height: 8),
-                        _buildInfoText('사업자번호', '123-45-67890'),
+                        _buildInfoText('사업자번호', '276-88-03728'),
                         const SizedBox(height: 8),
                         _buildInfoText('주소', '경기도 성남시 수정구 오야로6 2층 38호'),
                         const SizedBox(height: 8),
