@@ -36,6 +36,7 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
   final _shippingFeeController = TextEditingController();
   final _startDateController = TextEditingController();
   final _durationDaysController = TextEditingController();
+  final _totalCountController = TextEditingController();
   final _keywordsController = TextEditingController();
   final _missionContentController = TextEditingController();
   final _remarksController = TextEditingController();
@@ -73,6 +74,7 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
     _shippingFeeController.dispose();
     _startDateController.dispose();
     _durationDaysController.dispose();
+    _totalCountController.dispose();
     _keywordsController.dispose();
     _missionContentController.dispose();
     _remarksController.dispose();
@@ -111,6 +113,7 @@ class _FreeConsultationPageState extends State<FreeConsultationPage> {
 ━━━━━━━━━━━━━━━━━━━━
 상품 구매 시작 일자: ${_selectedStartDate != null ? '${_selectedStartDate!.year}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.day.toString().padLeft(2, '0')}' : '미선택'}
 진행일 수: ${_durationDaysController.text}일
+총 건수: ${_totalCountController.text}건
 
 ⭐ 리뷰 미션 가이드
 ━━━━━━━━━━━━━━━━━━━━
@@ -161,6 +164,7 @@ ${_remarksController.text.isEmpty ? '없음' : _remarksController.text}
                     _shippingFeeController.clear();
                     _startDateController.clear();
                     _durationDaysController.clear();
+                    _totalCountController.clear();
                     _keywordsController.clear();
                     _missionContentController.clear();
                     _remarksController.clear();
@@ -665,6 +669,24 @@ ${_remarksController.text.isEmpty ? '없음' : _remarksController.text}
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return '진행일 수를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _totalCountController,
+              decoration: const InputDecoration(
+                labelText: '총 건수 *',
+                hintText: '예: 30',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.format_list_numbered),
+                suffixText: '건',
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '총 건수를 입력해주세요';
                 }
                 return null;
               },
